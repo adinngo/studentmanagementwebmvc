@@ -1,6 +1,5 @@
 <Solution>
   <Project Path="Data/Data.csproj" Id="bd923687-df97-4527-a05b-58b449f92091" />
   <Project Path="Entities/Entities.csproj" />
-  <Project Path="Services/Services.csproj" />
   <Project Path="Web/Web.csproj" Id="dd364ecd-1a02-4973-9a3e-578c18a0016c" />
 </Solution>

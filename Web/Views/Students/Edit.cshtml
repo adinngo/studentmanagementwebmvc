@@ -1,0 +1,44 @@
+﻿@model StudentViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<h2>Create A Student</h2>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Edit Student</h4>
+
+            <form asp-action="Edit" method="post">
+
+                <input type="hidden" asp-for="ID" />
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="FirstMidName" class="form-label"></label>
+                    <input asp-for="FirstMidName" class="form-control" placeholder="Enter first name" />
+                    <span asp-validation-for="FirstMidName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EnrollmentDate" class="form-label"></label>
+                    <input asp-for="EnrollmentDate" type="date" class="form-control" />
+                    <span asp-validation-for="EnrollmentDate" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 using Data;
 using Microsoft.EntityFrameworkCore;
-using Services;
+
 
 namespace Web
 {
@@ -13,7 +13,7 @@ namespace Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<SchoolContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
-            builder.Services.AddScoped<StudentService>();
+
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
