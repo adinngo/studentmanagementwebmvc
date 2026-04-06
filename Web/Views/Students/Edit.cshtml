@@ -4,13 +4,13 @@
 }
 
 
-<h2>Create A Student</h2>
+<h2 class="text-center">Edit Student</h2>
 
-<div class="container mt-4">
+<div class="container mt-4 custom-max-width">
     <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title mb-4">Edit Student</h4>
-
+            <div asp-validation-summary="All" class="text-danger"></div>
             <form asp-action="Edit" method="post">
 
                 <input type="hidden" asp-for="ID" />
@@ -42,3 +42,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

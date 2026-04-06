@@ -10,7 +10,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title mb-4">Create Student</h4>
-
+            <div asp-validation-summary="All" class="text-danger"></div>
             <form asp-action="Create" method="post">
                 
                 <div class="mb-3">
@@ -40,3 +40,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
