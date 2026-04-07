@@ -7,17 +7,26 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <label>Find by name: <input name="searchString" value="@ViewBag.CurrentFilter" /></label>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a asp-action="Index">Back to list</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a action="Index" asp-route-sortOrder="@ViewBag.NameSortParam">@Html.DisplayNameFor(model => model.LastName)</a>
+                <a action="Index"
+                   asp-route-sortOrder="@ViewBag.NameSortParam"
+                   asp-route-searchString="@ViewBag.CurrentFilter">@Html.DisplayNameFor(model => model.LastName)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstMidName)
             </th>
             <th>
-                <a action="Index" asp-route-sortOrder="@ViewBag.DateSortParam">@Html.DisplayNameFor(model => model.EnrollmentDate)</a>
+                <a action="Index"
+                   asp-route-sortOrder="@ViewBag.DateSortParam"
+                   asp-route-searchString="@ViewBag.CurrentFilter">@Html.DisplayNameFor(model => model.EnrollmentDate)</a>
             </th>
             <th></th>
         </tr>

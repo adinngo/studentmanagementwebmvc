@@ -17,12 +17,19 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParam = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "date";
+            ViewBag.CurrentFilter = searchString;
 
             var students = from s in _context.Students select s;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.LastName.Contains(searchString) || s.FirstMidName.Contains(searchString));
+            }
+
             students = sortOrder switch
             {
                 "name_desc" => students.OrderByDescending(s => s.LastName),
