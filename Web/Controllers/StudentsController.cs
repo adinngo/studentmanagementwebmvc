@@ -174,7 +174,7 @@ namespace Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id, bool? saveChangesError)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var studentToDelete = await _context.Students.FindAsync(id);
 
@@ -187,7 +187,7 @@ namespace Web.Controllers
             }
             catch (DbUpdateException)
             {
-                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+                return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
             }
         }
     }
