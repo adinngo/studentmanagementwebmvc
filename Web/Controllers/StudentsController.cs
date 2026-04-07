@@ -17,10 +17,21 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var students = await _context.Students.ToListAsync();
-            var models = students.Select(s => new StudentViewModel
+            ViewBag.NameSortParam = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "date";
+
+            var students = from s in _context.Students select s;
+            students = sortOrder switch
+            {
+                "name_desc" => students.OrderByDescending(s => s.LastName),
+                "date_desc" => students.OrderByDescending(s => s.EnrollmentDate),
+                "date" => students.OrderBy(s => s.EnrollmentDate),
+                _ => students.OrderBy(s => s.LastName),
+            };
+
+            var models = (await students.ToListAsync()).Select(s => new StudentViewModel
             {
                 ID = s.ID,
                 LastName = s.LastName,
