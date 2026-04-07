@@ -17,10 +17,21 @@ namespace Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
+            ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParam = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "date";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             ViewBag.CurrentFilter = searchString;
 
             var students = from s in _context.Students select s;
@@ -38,14 +49,15 @@ namespace Web.Controllers
                 _ => students.OrderBy(s => s.LastName),
             };
 
-            var models = (await students.ToListAsync()).Select(s => new StudentViewModel
+            var models = students.Select(s => new StudentViewModel
             {
                 ID = s.ID,
                 LastName = s.LastName,
                 FirstMidName = s.FirstMidName,
                 EnrollmentDate = s.EnrollmentDate
             });
-            return View(models);
+            int pageSize = 3;
+            return View(await PaginatedList<StudentViewModel>.CreateAsync(models.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         public async Task<IActionResult> Details(int? id)

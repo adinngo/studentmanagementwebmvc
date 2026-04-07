@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StudentViewModel>
+﻿@model PaginatedList<StudentViewModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -18,15 +18,15 @@
             <th>
                 <a action="Index"
                    asp-route-sortOrder="@ViewBag.NameSortParam"
-                   asp-route-searchString="@ViewBag.CurrentFilter">@Html.DisplayNameFor(model => model.LastName)</a>
+                   asp-route-currentFilter="@ViewBag.CurrentFilter">LastName</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstMidName)
+                FirstMidName
             </th>
             <th>
                 <a action="Index"
                    asp-route-sortOrder="@ViewBag.DateSortParam"
-                   asp-route-searchString="@ViewBag.CurrentFilter">@Html.DisplayNameFor(model => model.EnrollmentDate)</a>
+                   asp-route-currentFilter="@ViewBag.CurrentFilter">EnrollmentDate</a>
             </th>
             <th></th>
         </tr>
@@ -53,3 +53,26 @@
         }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<div class="d-flex justify-content-end gap-2">
+
+    <a asp-action="Index"
+           asp-route-sortOrder="@ViewBag.CurrentSort"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewBag.CurrentFilter"
+           class="btn btn-light @prevDisabled">
+        Previous
+    </a>
+
+    <a asp-action="Index"
+           asp-route-sortOrder="@ViewBag.CurrentSort"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewBag.CurrentFilter"
+           class="btn btn-light @nextDisabled">
+        Next
+    </a>
+
+</div>
