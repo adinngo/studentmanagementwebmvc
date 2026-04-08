@@ -1,4 +1,6 @@
-﻿namespace Web.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web.Models
 {
     public class StudentDetailsViewModel
     {
@@ -11,6 +13,8 @@
     public class EnrollmentDTO
     {
         public string? CourseTitle { get; set; }
+
+        [DisplayFormat(NullDisplayText = "No grade")]
         public string? Grade { get; set; }
     }
 }
