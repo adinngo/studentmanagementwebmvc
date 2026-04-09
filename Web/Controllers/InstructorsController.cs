@@ -17,7 +17,7 @@ namespace Web.Controllers
         }
         public async Task<IActionResult> Index(int? id, int? courseID)
         {
-            var viewModel = new InstructorIndexVM();
+            InstructorIndexVM viewModel = new();
             viewModel.InstructorsVM = await _context.Instructors.Select(p => new InstructorViewModel
             {
                 ID = p.ID,
@@ -63,35 +63,6 @@ namespace Web.Controllers
             return View(viewModel);
         }
 
-        //public async Task<IActionResult> Select(int? id, int? courseID)
-        //{
-        //    if (id == null) return NotFound();
 
-        //    var viewModel = new InstructorIndexData();
-        //    var instructor = _context.Instructors.Select(p => new InstructorViewModel
-        //    {
-        //        ID = p.ID,
-        //        LastName = p.LastName,
-        //        FirstMidName = p.FirstMidName,
-        //        HireDate = p.HireDate,
-        //        Office = p.OfficeAssignment.Location,
-        //        Courses = p.CourseAssignments.Select(c => new CourseAssignmentDTO
-        //        {
-        //            CourseID = c.CourseID,
-        //            CourseTitle = c.Course.Title
-        //        })
-        //    }).Single(i => i.ID == id);
-
-        //    if (instructor == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    viewModel.courses = instructor.Courses.Select(c => new CourseViewModel
-        //    {
-
-        //    })
-
-        //    return View();
-        //}
     }
 }
