@@ -28,13 +28,7 @@ namespace Web.Controllers
                 Courses = p.CourseAssignments.Select(c => new CourseViewModel
                 {
                     CourseID = c.CourseID,
-                    Title = c.Course.Title,
-                    Department = c.Course.Department.Name,
-                    EnrollmentViewModels = c.Course.Enrollments.Select(e => new EnrollmentViewModel
-                    {
-                        StudentFullName = e.Student.FullName,
-                        Grade = e.Grade.ToString()
-                    })
+                    Title = c.Course.Title
 
                 })
             }).AsNoTracking().ToListAsync();
@@ -43,25 +37,26 @@ namespace Web.Controllers
             {
                 ViewData["InstructorID"] = id.Value;
 
-                var selectedInstructor = viewModel.InstructorsVM
-                    .SingleOrDefault(i => i.ID == id.Value);
-
-                if (selectedInstructor != null)
-                {
-                    viewModel.CoursesVM = selectedInstructor.Courses;
-                }
-
-                if (courseID != null && viewModel.CoursesVM != null)
-                {
-                    ViewData["CourseID"] = courseID.Value;
-                    var selectedCourse = viewModel.CoursesVM
-                        .SingleOrDefault(c => c.CourseID == courseID.Value);
-
-                    if (selectedCourse != null)
+                viewModel.CoursesVM = await _context.CourseAssignments
+                    .Where(c => c.InstructorID == id.Value).Select(c => new CourseViewModel
                     {
-                        viewModel.EnrollmentsVM = selectedCourse.EnrollmentViewModels;
-                    }
-                }
+                        CourseID = c.CourseID,
+                        Title = c.Course.Title,
+                        Department = c.Course.Department.Name
+                    }).AsNoTracking().ToListAsync();
+            }
+
+            if (courseID != null)
+            {
+                ViewData["CourseID"] = courseID.Value;
+
+                viewModel.EnrollmentsVM = await _context.Enrollments.
+                    Where(e => e.CourseID == courseID.Value).Select(e => new EnrollmentViewModel
+                    {
+                        StudentFullName = e.Student.FullName,
+                        Grade = e.Grade.ToString()
+                    }).AsNoTracking().ToListAsync();
+
             }
 
 
