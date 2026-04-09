@@ -2,7 +2,8 @@
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Web.Models;
+using Web.Models.Enrollment;
+using Web.Models.Student;
 
 
 namespace Web.Controllers
@@ -79,7 +80,7 @@ namespace Web.Controllers
                 LastName = student.LastName,
                 FirstMidName = student.FirstMidName,
                 EnrollmentDate = student.EnrollmentDate,
-                Enrollments = student.Enrollments.Select(e => new EnrollmentDTO
+                Enrollments = student.Enrollments.Select(e => new EnrollmentViewModel
                 {
                     CourseTitle = e.Course.Title,
                     Grade = e.Grade.ToString()

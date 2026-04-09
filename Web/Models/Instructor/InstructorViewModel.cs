@@ -1,32 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Web.Models.Course;
 
-namespace Web.Models
+namespace Web.Models.Instructor
 {
-    public class StudentViewModel
+    public class InstructorViewModel
     {
         public int ID { get; set; }
+
         [Required]
-        [StringLength(50)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
         [Required]
-        [StringLength(50)]
-        [Column("FirstName")]
         [Display(Name = "First Name")]
         public string FirstMidName { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Enrollment Date")]
-        public DateTime EnrollmentDate { get; set; }
+        [Display(Name = "Hire Date")]
+        public DateTime HireDate { get; set; }
+
         [Display(Name = "Full Name")]
         public string FullName
         {
-            get
-            {
-                return LastName + ", " + FirstMidName;
-            }
+            get { return LastName + ", " + FirstMidName; }
         }
 
+        public IEnumerable<CourseViewModel> Courses { get; set; }
+        public string Office { get; set; }
     }
+
+
 }

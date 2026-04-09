@@ -1,0 +1,116 @@
+﻿@model Web.Models.Instructor.InstructorIndexVM
+@{
+    ViewData["Title"] = "Instructors";
+}
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@* <form asp-action="Index" method="get">
+    <label>Find by name: <input name="searchString" value="@ViewBag.CurrentFilter" /></label>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a asp-action="Index">Back to list</a>
+</form> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Hire Date</th>
+            <th>Office</th>
+            <th>Courses</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.InstructorsVM)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["InstructorID"])
+            {
+                selectedRow = "table-success"; // Highlight dòng được chọn
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Office)
+                </td>
+                <td>
+                    @foreach (var course in item.Courses)
+                    {
+                        <dl class="row">
+                            <dt class="col-sm-2">@Html.DisplayFor(modelItem => course.CourseID)</dt>
+                            <dd class="col-sm-10">@Html.DisplayFor(modelItem => course.Title)</dd>
+                        </dl>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* --- PHẦN 2: HIỂN THỊ KHÓA HỌC KHI CHỌN GIẢNG VIÊN --- *@
+@if (Model.CoursesVM != null)
+{
+    <h3>Courses Taught by Selected Instructor</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Number</th>
+            <th>Title</th>
+            <th>Department</th>
+        </tr>
+
+        @foreach (var item in Model.CoursesVM)
+        {
+            string selectedRow = "";
+            if (item.CourseID == (int?)ViewData["CourseID"])
+            {
+                selectedRow = "table-info";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseID })
+                </td>
+                <td>@item.CourseID</td>
+                <td>@item.Title</td>
+                <td>@item.Department</td>
+            </tr>
+        }
+    </table>
+}
+
+@* --- PHẦN 3: HIỂN THỊ SINH VIÊN KHI CHỌN KHÓA HỌC --- *@
+@if (Model.EnrollmentsVM != null)
+{
+    <h3>Students Enrolled in Selected Course</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        @foreach (var item in Model.EnrollmentsVM)
+        {
+            <tr>
+                <td>@item.StudentFullName</td>
+                <td>
+                    @item.Grade
+                </td>
+            </tr>
+        }
+    </table>
+}

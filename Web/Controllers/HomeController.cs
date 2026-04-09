@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web.Models;
+using Web.Models.About;
 
 namespace Web.Controllers
 {
