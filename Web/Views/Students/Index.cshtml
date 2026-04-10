@@ -29,7 +29,7 @@
                    asp-route-sortOrder="@ViewBag.DateSortParam"
                    asp-route-currentFilter="@ViewBag.CurrentFilter">EnrollmentDate</a>
             </th>
-            
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -55,8 +55,8 @@
     </tbody>
 </table>
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var prevDisabled = !Model.HasPreviousPage ? "btn-outline-secondary disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "btn-outline-secondary disabled" : "";
 }
 <div class="d-flex justify-content-end gap-2">
 
@@ -64,7 +64,7 @@
            asp-route-sortOrder="@ViewBag.CurrentSort"
            asp-route-pageNumber="@(Model.PageIndex - 1)"
            asp-route-currentFilter="@ViewBag.CurrentFilter"
-           class="btn btn-light @prevDisabled">
+           class="btn btn-outline-primary @prevDisabled">
         Previous
     </a>
 
@@ -72,7 +72,7 @@
            asp-route-sortOrder="@ViewBag.CurrentSort"
            asp-route-pageNumber="@(Model.PageIndex + 1)"
            asp-route-currentFilter="@ViewBag.CurrentFilter"
-           class="btn btn-light @nextDisabled">
+           class="btn btn-outline-primary @nextDisabled">
         Next
     </a>
 

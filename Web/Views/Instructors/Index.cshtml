@@ -68,7 +68,7 @@
                 <td>
                     @foreach (var course in item.Courses)
                     {
-                        <dl class="row">
+                        <dl class="row mb-0">
                             <dt class="col-sm-2">@Html.DisplayFor(modelItem => course.CourseID)</dt>
                             <dd class="col-sm-10">@Html.DisplayFor(modelItem => course.Title)</dd>
                         </dl>
@@ -90,8 +90,8 @@
     </tbody>
 </table>
 @{
-    var prevDisabled = !Model.InstructorsVM.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.InstructorsVM.HasNextPage ? "disabled" : "";
+    var prevDisabled = !Model.InstructorsVM.HasPreviousPage ? "btn-outline-secondary disabled" : "";
+    var nextDisabled = !Model.InstructorsVM.HasNextPage ? "btn-outline-secondary disabled" : "";
 }
 <div class="d-flex justify-content-end gap-2">
 
@@ -100,7 +100,7 @@
            asp-route-sortOrder="@ViewBag.CurrentSort"
            asp-route-pageNumber="@(Model.InstructorsVM.PageIndex - 1)"
            asp-route-currentFilter="@ViewBag.CurrentFilter"
-           class="btn btn-light @prevDisabled">
+           class="btn btn-outline-primary @prevDisabled">
         Previous
     </a>
 
@@ -109,7 +109,7 @@
            asp-route-sortOrder="@ViewBag.CurrentSort"
            asp-route-pageNumber="@(Model.InstructorsVM.PageIndex + 1)"
            asp-route-currentFilter="@ViewBag.CurrentFilter"
-           class="btn btn-light @nextDisabled">
+           class="btn btn-outline-primary @nextDisabled">
         Next
     </a>
 
