@@ -23,14 +23,7 @@
                     Last Name
                 </a>
             </th>
-            <th>
-                <a action="Index"
-                       asp-route-id=""
-                       asp-route-sortOrder="@ViewBag.NameSortParam"
-                       asp-route-currentFilter="@ViewBag.CurrentFilter">
-                    First Name
-                </a>
-            </th>
+            <th>First Name</th>
             <th>
                 <a action="Index"
                        asp-route-id=""
@@ -136,9 +129,10 @@
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.ActionLink("Select", "Index", new { 
-                        courseID = item.CourseID, 
-                        currentFilter = ViewBag.CurrentFilter, 
+                    @Html.ActionLink("Select", "Index", new
+                    {
+                        courseID = item.CourseID,
+                        currentFilter = ViewBag.CurrentFilter,
                         pageNumber = ViewBag.CurrentPage
                     })
                 </td>
