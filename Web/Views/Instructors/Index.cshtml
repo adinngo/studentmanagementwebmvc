@@ -7,16 +7,38 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-@* <form asp-action="Index" method="get">
+<form asp-action="Index" method="get">
     <label>Find by name: <input name="searchString" value="@ViewBag.CurrentFilter" /></label>
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary" asp-route-id="">Search</button>
     <a asp-action="Index">Back to list</a>
-</form> *@
+</form>
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Hire Date</th>
+            <th>
+                <a action="Index"
+                       asp-route-id=""
+                       asp-route-sortOrder="@ViewBag.NameSortParam"
+                       asp-route-currentFilter="@ViewBag.CurrentFilter">
+                    Last Name
+                </a>
+            </th>
+            <th>
+                <a action="Index"
+                       asp-route-id=""
+                       asp-route-sortOrder="@ViewBag.NameSortParam"
+                       asp-route-currentFilter="@ViewBag.CurrentFilter">
+                    First Name
+                </a>
+            </th>
+            <th>
+                <a action="Index"
+                       asp-route-id=""
+                       asp-route-sortOrder="@ViewBag.NameSortParam"
+                       asp-route-currentFilter="@ViewBag.CurrentFilter">
+                    Hire Date
+                </a>
+            </th>
             <th>Office</th>
             <th>Courses</th>
             <th></th>
@@ -53,7 +75,12 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Index"
+                           asp-route-id="@item.ID"
+                           asp-route-pageNumber="@ViewBag.CurrentPage"
+                           asp-route-currentFilter="@ViewBag.CurrentFilter">
+                        Select
+                    </a> |
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
@@ -62,6 +89,31 @@
         }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.InstructorsVM.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.InstructorsVM.HasNextPage ? "disabled" : "";
+}
+<div class="d-flex justify-content-end gap-2">
+
+    <a asp-action="Index"
+           asp-route-id=""
+           asp-route-sortOrder="@ViewBag.CurrentSort"
+           asp-route-pageNumber="@(Model.InstructorsVM.PageIndex - 1)"
+           asp-route-currentFilter="@ViewBag.CurrentFilter"
+           class="btn btn-light @prevDisabled">
+        Previous
+    </a>
+
+    <a asp-action="Index"
+           asp-route-id=""
+           asp-route-sortOrder="@ViewBag.CurrentSort"
+           asp-route-pageNumber="@(Model.InstructorsVM.PageIndex + 1)"
+           asp-route-currentFilter="@ViewBag.CurrentFilter"
+           class="btn btn-light @nextDisabled">
+        Next
+    </a>
+
+</div>
 
 @* --- PHẦN 2: HIỂN THỊ KHÓA HỌC KHI CHỌN GIẢNG VIÊN --- *@
 @if (Model.CoursesVM != null)
@@ -84,7 +136,11 @@
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseID })
+                    @Html.ActionLink("Select", "Index", new { 
+                        courseID = item.CourseID, 
+                        currentFilter = ViewBag.CurrentFilter, 
+                        pageNumber = ViewBag.CurrentPage
+                    })
                 </td>
                 <td>@item.CourseID</td>
                 <td>@item.Title</td>
