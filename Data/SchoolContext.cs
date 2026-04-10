@@ -34,6 +34,20 @@ namespace Data
             modelBuilder.Entity<Enrollment>()
                 .HasIndex(e => new { e.CourseID, e.StudentID })
                 .IsUnique();
+
+            // Cấu hình quan hệ giữa Course và Enrollment
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseID)
+                .OnDelete(DeleteBehavior.Restrict); // <--- CHÍNH LÀ DÒNG NÀY
+
+            // Nếu bạn có bảng CourseAssignment, cũng nên làm tương tự
+            modelBuilder.Entity<CourseAssignment>()
+                .HasOne(ca => ca.Course)
+                .WithMany(c => c.CourseAssignments)
+                .HasForeignKey(ca => ca.CourseID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

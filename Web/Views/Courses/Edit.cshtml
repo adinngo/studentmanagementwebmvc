@@ -1,0 +1,52 @@
+﻿@model Web.Models.Course.CourseViewModel
+@{
+    ViewData["Title"] = "Edit Course";
+}
+
+
+<div class="container mt-4 custom-max-width">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Edit Student</h3>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <form asp-action="Edit" method="post">
+                
+                <div class="form-group mb-3">
+                    <input type="hidden" asp-for="@Model.CourseID" />
+                    <div>
+                        @Html.DisplayFor(modelItem => modelItem.CourseID)
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="@Model.Title" class="form-label"></label>
+                    <input asp-for="@Model.Title" class="form-control" placeholder="Enter Title" />
+                    <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="@Model.Credits" class="form-label"></label>
+                    <input asp-for="@Model.Credits" class="form-control" placeholder="Enter Credits [1, 5]" />
+                    <span asp-validation-for="@Model.Credits" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="DepartmentID" class="control-label">Department</label>
+                    <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentID">
+                        <option value="">-- Select Department --</option>
+                    </select>
+                    <span asp-validation-for="DepartmentID" class="text-danger" />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
