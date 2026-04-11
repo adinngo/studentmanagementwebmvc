@@ -115,7 +115,7 @@ namespace Web.Controllers
                 LastName = instructor.LastName,
                 FirstMidName = instructor.FirstMidName,
                 HireDate = instructor.HireDate,
-                OfficeLocation = instructor.OfficeAssignment.Location,
+                OfficeLocation = instructor.OfficeAssignment?.Location,
                 Courses = allCourses.Select(c => new CourseCheckboxViewModel
                 {
                     CourseID = c.CourseID,
