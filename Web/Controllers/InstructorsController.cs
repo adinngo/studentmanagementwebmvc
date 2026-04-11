@@ -203,7 +203,7 @@ namespace Web.Controllers
             var currentAssignedIds = instructorToUpdate.CourseAssignments.Select(c => c.CourseID).ToHashSet();
             var selectedIds = courseCheckboxes.Where(c => c.IsAssigned).Select(c => c.CourseID).ToHashSet();
 
-            //
+            //thêm những cái mới vào 
             foreach (var course in selectedIds.Except(currentAssignedIds))
             {
                 instructorToUpdate.CourseAssignments.Add(new CourseAssignment
@@ -222,5 +222,50 @@ namespace Web.Controllers
                 instructorToUpdate.CourseAssignments.Remove(ca);
             }
         }
+
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null) return NotFound();
+            var viewModel = await _context.Instructors
+                .Select(ist => new InstructorViewModel
+                {
+                    ID = ist.ID,
+                    LastName = ist.LastName,
+                    FirstMidName = ist.FirstMidName,
+                    HireDate = ist.HireDate,
+                    Office = ist.OfficeAssignment.Location,
+                }).AsNoTracking().FirstOrDefaultAsync(ist => ist.ID == id);
+            if (viewModel == null) return NotFound();
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["Error"] = "";
+            }
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var existingInstructor = await _context.Instructors.FindAsync(id);
+            if (existingInstructor == null) return NotFound();
+            var departments = await _context.Departments.Where(d => d.InstructorID == id).ToListAsync();
+            foreach (var dep in departments)
+            {
+                dep.InstructorID = null;
+            }
+            try
+            {
+                _context.Instructors.Remove(existingInstructor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Delete", new { id, saveChangesError = true });
+            }
+
+        }
+
     }
 }
