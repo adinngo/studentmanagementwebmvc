@@ -1,4 +1,5 @@
 ﻿using Data;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web.Models.Course;
@@ -95,6 +96,131 @@ namespace Web.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+            var instructor = await _context.Instructors.
+                Include(o => o.OfficeAssignment).
+                Include(c => c.CourseAssignments).ThenInclude(c => c.Course)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ist => ist.ID == id);
 
+            if (instructor == null) return NotFound();
+
+            var allCourses = await _context.Courses.ToListAsync();
+
+            var viewModel = new InstructorEditVM
+            {
+                ID = instructor.ID,
+                LastName = instructor.LastName,
+                FirstMidName = instructor.FirstMidName,
+                HireDate = instructor.HireDate,
+                OfficeLocation = instructor.OfficeAssignment.Location,
+                Courses = allCourses.Select(c => new CourseCheckboxViewModel
+                {
+                    CourseID = c.CourseID,
+                    Title = c.Title,
+                    IsAssigned = instructor.CourseAssignments.Any(ca => ca.CourseID == c.CourseID)
+                }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, InstructorEditVM viewModel)
+        {
+            if (id != viewModel.ID) return NotFound();
+            if (ModelState.IsValid)
+            {
+                var instructorToUpdate = await _context.Instructors
+               .Include(o => o.OfficeAssignment)
+               .Include(c => c.CourseAssignments)
+               .ThenInclude(c => c.Course)
+               .FirstOrDefaultAsync(ist => ist.ID == id);
+
+                if (instructorToUpdate == null) return NotFound();
+
+                instructorToUpdate.LastName = viewModel.LastName;
+                instructorToUpdate.FirstMidName = viewModel.FirstMidName;
+                instructorToUpdate.HireDate = viewModel.HireDate;
+
+                UpdateOfficeAssignment(instructorToUpdate, viewModel.OfficeLocation);
+                UpdateCourseAssignments(instructorToUpdate, viewModel.Courses);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+            }
+
+            await PopulateAssignedCourseData(viewModel);
+            return View(viewModel);
+        }
+
+        private async Task PopulateAssignedCourseData(InstructorEditVM viewModel)
+        {
+            var allCourses = await _context.Courses.ToListAsync();
+            var selectedIds = viewModel.Courses.Where(c => c.IsAssigned).Select(c => c.CourseID).ToHashSet();
+
+            viewModel.Courses = allCourses.Select(c => new CourseCheckboxViewModel
+            {
+                CourseID = c.CourseID,
+                Title = c.Title,
+                IsAssigned = selectedIds.Contains(c.CourseID)
+            }).ToList();
+        }
+
+        private void UpdateOfficeAssignment(Instructor instructorToUpdate, string? officeLocation)
+        {
+            if (string.IsNullOrWhiteSpace(officeLocation))
+            {
+                instructorToUpdate.OfficeAssignment = null!;
+            }
+            else
+            {
+                if (instructorToUpdate.OfficeAssignment == null)
+                {
+                    instructorToUpdate.OfficeAssignment = new OfficeAssignment
+                    {
+                        Location = officeLocation
+                    };
+                }
+                else
+                {
+                    instructorToUpdate.OfficeAssignment.Location = officeLocation;
+                }
+            }
+        }
+
+        private void UpdateCourseAssignments(Instructor instructorToUpdate, List<CourseCheckboxViewModel> courseCheckboxes)
+        {
+            var currentAssignedIds = instructorToUpdate.CourseAssignments.Select(c => c.CourseID).ToHashSet();
+            var selectedIds = courseCheckboxes.Where(c => c.IsAssigned).Select(c => c.CourseID).ToHashSet();
+
+            //
+            foreach (var course in selectedIds.Except(currentAssignedIds))
+            {
+                instructorToUpdate.CourseAssignments.Add(new CourseAssignment
+                {
+                    CourseID = course,
+                    InstructorID = instructorToUpdate.ID
+                });
+            }
+
+            var toRemove = instructorToUpdate.CourseAssignments
+                                 .Where(ca => !selectedIds.Contains(ca.CourseID))
+                                 .ToList();
+
+            foreach (var ca in toRemove)
+            {
+                instructorToUpdate.CourseAssignments.Remove(ca);
+            }
+        }
     }
 }
