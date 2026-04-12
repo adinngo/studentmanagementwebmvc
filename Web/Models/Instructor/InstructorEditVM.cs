@@ -25,7 +25,7 @@ namespace Web.Models.Instructor
             get { return LastName + ", " + FirstMidName; }
         }
 
-        public List<CourseCheckboxViewModel> Courses { get; set; } = new();
+        public List<CourseCheckboxViewModel> Courses { get; set; }
         public string? OfficeLocation { get; set; }
     }
 
