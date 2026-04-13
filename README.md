@@ -12,7 +12,7 @@ The goal of this project is to practice backend development and understand how r
 ### ✅ Completed
 * Student Management (Create - Read - Update - Delete)
 * Course Management (Create - Read - Update - Delete)
-* Instructor Management (Read - Update - Delete)
+* Instructor Management (Create - Read - Update - Delete)
 * Enrollment Management
 * Pagination
 * Data Validation with Data Annotations
@@ -20,7 +20,6 @@ The goal of this project is to practice backend development and understand how r
 * ViewModel usage for clean data transfer, prevent Over posting
 
 ### ⚠️ In Progress
-* Instructor Management (Create functionality not completed)
 * Department Management (Not completed)
 
 ---
