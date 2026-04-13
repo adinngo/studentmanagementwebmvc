@@ -267,5 +267,72 @@ namespace Web.Controllers
 
         }
 
+
+        public async Task<IActionResult> Create()
+        {
+            var allCourses = await _context.Courses.ToListAsync();
+
+            var viewModel = new InstructorEditVM
+            {
+                HireDate = DateTime.Now,
+                Courses = allCourses.Select(c => new CourseCheckboxViewModel
+                {
+                    CourseID = c.CourseID,
+                    Title = c.Title,
+                    IsAssigned = false
+                }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(InstructorEditVM viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var instructor = new Instructor()
+                {
+                    LastName = viewModel.LastName,
+                    FirstMidName = viewModel.FirstMidName,
+                    HireDate = viewModel.HireDate,
+                    CourseAssignments = new List<CourseAssignment>()
+                };
+
+                if (!string.IsNullOrEmpty(viewModel.OfficeLocation))
+                {
+                    instructor.OfficeAssignment = new OfficeAssignment
+                    {
+                        Location = viewModel.OfficeLocation
+                    };
+                }
+                var selectedIds = viewModel.Courses.Where(c => c.IsAssigned).Select(c => c.CourseID);
+
+                foreach (var course in selectedIds)
+                {
+                    instructor.CourseAssignments.Add(new CourseAssignment
+                    {
+                        CourseID = course,
+                        InstructorID = instructor.ID
+                    });
+                }
+                try
+                {
+                    _context.Instructors.Add(instructor);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+
+
+            }
+            return View(viewModel);
+        }
+
     }
 }
